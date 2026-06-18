@@ -1,0 +1,16 @@
+# Render Blueprint — deploys AdTrust CXAI as one Docker web service.
+# In the Render dashboard: New + > Blueprint > point at this repo.
+services:
+  - type: web
+    name: adtrust-cxai
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: SEED_ON_START
+        value: "1"
+      - key: CORS_ORIGINS
+        value: "*"
+    healthCheckPath: /api/health
+    autoDeploy: true

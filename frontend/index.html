@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AdTrust · CIOS — Autonomous Customer Intelligence OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <!-- OS Chrome -->
+  <div id="os-chrome">
+    <div id="topbar">
+      <div class="tb-left">
+        <div class="os-logo"><span class="logo-adt">ADT</span><span class="logo-rust">RUST</span><span class="logo-dot">·</span><span class="logo-cios">CIOS</span></div>
+        <div class="tb-sep"></div>
+        <nav id="module-nav">
+          <button class="mod-btn active" data-mod="overview">COMMAND</button>
+          <button class="mod-btn" data-mod="twin-timeline">EMO·TWIN</button>
+          <button class="mod-btn" data-mod="counterfactual">COUNTERFACTUAL</button>
+          <button class="mod-btn" data-mod="knowledge-graph">NEO4J·GRAPH</button>
+          <button class="mod-btn" data-mod="deliberation">MULTI·AGENT</button>
+          <button class="mod-btn" data-mod="campaign-trust">CAMPAIGN·TRUST</button>
+          <button class="mod-btn" data-mod="rl-engine">AFFECTIVE·RL</button>
+          <button class="mod-btn" data-mod="simulation">SIM·SANDBOX</button>
+          <button class="mod-btn" data-mod="evolution">TWIN·EVOLUTION</button>
+        </nav>
+      </div>
+      <div class="tb-right">
+        <div class="sys-metric" id="sys-customers"><span class="sm-lbl">CUSTOMERS</span><span class="sm-val" id="hdr-customers">—</span></div>
+        <div class="sys-metric"><span class="sm-lbl">AVG TRUST</span><span class="sm-val cyan" id="hdr-trust">—</span></div>
+        <div class="sys-metric"><span class="sm-lbl">FLAGGED</span><span class="sm-val magenta" id="hdr-flagged">—</span></div>
+        <div class="sys-metric"><span class="sm-lbl">PORTFOLIO LTV</span><span class="sm-val green" id="hdr-ltv">—</span></div>
+        <div class="pulse-dot" id="pulse"><span></span>LIVE</div>
+        <div class="sys-time" id="sys-time"></div>
+      </div>
+    </div>
+
+    <!-- Left Sidebar: Customer Roster -->
+    <div id="sidebar">
+      <div class="sb-header">
+        <span class="sb-title">ROSTER</span>
+        <span class="sb-count" id="roster-count">—</span>
+      </div>
+      <div id="roster-list"></div>
+    </div>
+
+    <!-- Main Workspace -->
+    <main id="workspace">
+      <!-- MODULE: COMMAND OVERVIEW -->
+      <div class="module active" id="mod-overview">
+        <div class="module-header">
+          <h2>COMMAND OVERVIEW <span class="module-sub">Autonomous Customer Intelligence Operating System</span></h2>
+          <div class="header-actions">
+            <button class="act-btn" onclick="refreshAll()">↻ REFRESH</button>
+          </div>
+        </div>
+        <div id="kpi-strip"></div>
+        <div class="overview-grid">
+          <div class="ov-panel" id="twin-detail-panel">
+            <div class="panel-label">DIGITAL TWIN · <span id="twin-id-label">SELECT CUSTOMER</span></div>
+            <div id="twin-core-display"><div class="empty-state">← Select a customer from the roster</div></div>
+          </div>
+          <div class="ov-panel">
+            <div class="panel-label">EMOTIONAL SPECTRUM</div>
+            <div id="emotion-bars-display"></div>
+          </div>
+          <div class="ov-panel">
+            <div class="panel-label">INTENT FORECAST</div>
+            <div id="intent-bars-display"></div>
+          </div>
+          <div class="ov-panel span-2">
+            <div class="panel-label">AUTONOMOUS NEXT-BEST-ACTION · AGENT TRACE</div>
+            <div id="nba-display"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE: EMOTIONAL TWIN TIMELINE -->
+      <div class="module" id="mod-twin-timeline">
+        <div class="module-header">
+          <h2>EMOTIONAL DIGITAL TWIN TIMELINE <span class="module-sub">Emotion drift · Trust evolution · Satisfaction trajectories</span></h2>
+        </div>
+        <div class="timeline-controls">
+          <span class="ctrl-label">CUSTOMER:</span>
+          <select id="tl-customer-select" class="os-select"></select>
+          <button class="act-btn" onclick="loadTimeline()">LOAD TIMELINE</button>
+        </div>
+        <div id="timeline-chart-area">
+          <div class="empty-state">Select a customer and load timeline</div>
+        </div>
+        <div id="timeline-summary"></div>
+      </div>
+
+      <!-- MODULE: COUNTERFACTUAL JOURNEY SIMULATOR -->
+      <div class="module" id="mod-counterfactual">
+        <div class="module-header">
+          <h2>COUNTERFACTUAL JOURNEY SIMULATOR <span class="module-sub">Actual vs. alternative vs. no-action baselines</span></h2>
+        </div>
+        <div class="timeline-controls">
+          <span class="ctrl-label">CUSTOMER:</span>
+          <select id="cf-customer-select" class="os-select"></select>
+          <button class="act-btn" onclick="loadCounterfactual()">SIMULATE</button>
+        </div>
+        <div id="cf-display"></div>
+      </div>
+
+      <!-- MODULE: KNOWLEDGE GRAPH -->
+      <div class="module" id="mod-knowledge-graph">
+        <div class="module-header">
+          <h2>NEO4J CUSTOMER KNOWLEDGE GRAPH <span class="module-sub">Customers · Emotions · Campaigns · Channels · Products · Intents</span></h2>
+          <button class="act-btn" onclick="loadKnowledgeGraph()">LOAD GRAPH</button>
+        </div>
+        <div id="kg-container">
+          <svg id="kg-svg" width="100%" height="580"></svg>
+          <div id="kg-legend">
+            <div class="kg-node-type"><span class="kg-dot" style="background:#3fe0d0"></span>Customer</div>
+            <div class="kg-node-type"><span class="kg-dot" style="background:#ffb454"></span>Emotion</div>
+            <div class="kg-node-type"><span class="kg-dot" style="background:#9a7bff"></span>Campaign</div>
+            <div class="kg-node-type"><span class="kg-dot" style="background:#5fd98a"></span>Channel</div>
+            <div class="kg-node-type"><span class="kg-dot" style="background:#ff8a5c"></span>Product</div>
+          </div>
+        </div>
+        <div id="kg-info"></div>
+      </div>
+
+      <!-- MODULE: MULTI-AGENT DELIBERATION -->
+      <div class="module" id="mod-deliberation">
+        <div class="module-header">
+          <h2>MULTI-AGENT DELIBERATION CONSOLE <span class="module-sub">Agent reasoning · Voting · Negotiation · Consensus</span></h2>
+        </div>
+        <div class="timeline-controls">
+          <span class="ctrl-label">CUSTOMER:</span>
+          <select id="delib-customer-select" class="os-select"></select>
+          <button class="act-btn" onclick="loadDeliberation()">RUN DELIBERATION</button>
+        </div>
+        <div id="delib-display"></div>
+      </div>
+
+      <!-- MODULE: CAMPAIGN TRUST GRAPH -->
+      <div class="module" id="mod-campaign-trust">
+        <div class="module-header">
+          <h2>CAMPAIGN TRUST GRAPH <span class="module-sub">Fraud detection · Bot detection · Attribution anomalies · Suspicious clusters</span></h2>
+          <button class="act-btn" onclick="loadCampaignTrust()">LOAD GRAPH</button>
+        </div>
+        <div id="ct-display"></div>
+      </div>
+
+      <!-- MODULE: AFFECTIVE RL -->
+      <div class="module" id="mod-rl-engine">
+        <div class="module-header">
+          <h2>AFFECTIVE REINFORCEMENT LEARNING ENGINE <span class="module-sub">Rewards: Revenue · Retention · Trust · Emotional satisfaction · LTV</span></h2>
+          <button class="act-btn" onclick="loadRL()">LOAD RL STATE</button>
+        </div>
+        <div id="rl-display"></div>
+      </div>
+
+      <!-- MODULE: SIMULATION SANDBOX -->
+      <div class="module" id="mod-simulation">
+        <div class="module-header">
+          <h2>DIGITAL TWIN SIMULATION SANDBOX <span class="module-sub">500 synthetic twins · Campaign outcome estimation before deployment</span></h2>
+          <button class="act-btn" onclick="loadSimulation()">RUN SIMULATION</button>
+        </div>
+        <div id="sim-display"></div>
+      </div>
+
+      <!-- MODULE: TWIN EVOLUTION ENGINE -->
+      <div class="module" id="mod-evolution">
+        <div class="module-header">
+          <h2>REAL-TIME DIGITAL TWIN EVOLUTION ENGINE <span class="module-sub">Emotional · Intent · Trust · Behavioral state — continuous updates</span></h2>
+        </div>
+        <div class="timeline-controls">
+          <span class="ctrl-label">CUSTOMER:</span>
+          <select id="evo-customer-select" class="os-select"></select>
+          <button class="act-btn" onclick="loadEvolution()">LOAD EVOLUTION</button>
+        </div>
+        <div id="evo-display"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/assets/app.js"></script>
+</body>
+</html>
