@@ -1,3 +1,7 @@
+<div align="center"><img src="https://raw.githubusercontent.com/1stsimplifycode/1stsimplifycode/main/assets/universal-project-3d.svg" width="100%" alt="Animated isometric engineering showcase" /></div>
+
+[← Engineering Portfolio](https://github.com/1stsimplifycode) · [All Public Domains](https://github.com/1stsimplifycode/1stsimplifycode/blob/main/docs/PROJECT_DIRECTORY.md)
+
 # AdTrust CXAI
 
 ### Trust-Aware Affective Customer Intelligence & Autonomous Journey Orchestration
